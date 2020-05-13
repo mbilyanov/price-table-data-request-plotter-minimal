@@ -1,4 +1,4 @@
-# price-table-data-request-plotter [sandbox]
+# price-table-data-request-plotter [minimal]
 
 This is the experimental _minimal_ edition for the request-plotter project.
 
