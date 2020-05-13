@@ -1,0 +1,166 @@
+" ;-----------------------------------------------------------------------------
+" ; Local VIM Project Configuration File
+" ;-----------------------------------------------------------------------------
+
+" ;-----------------------------------------------------------------------------
+" ; Project Settings
+" ;-----------------------------------------------------------------------------
+let g:vix_current_project.root = g:localvimrc_script_dir
+let g:vix_current_project.name = 'plotter'
+let g:vix_current_project.exec = 'app-plotter.py'
+
+" ;-----------------------------------------------------------------------------
+" ; Make (tmux/shell).
+" ;-----------------------------------------------------------------------------
+let g:vix_current_project.command.make.prefix =
+            \ 'echo "{prefix} No <make> rules defined." &&'
+let g:vix_current_project.command.make.body =
+            \ 'echo "{prefix} No <make> rules defined." &&'
+let g:vix_current_project.command.make.postfix =
+            \ 'echo "{prefix} No <make> rules defined."'
+
+" ;-----------------------------------------------------------------------------
+" ; Build (tmux/shell).
+" ;-----------------------------------------------------------------------------
+let g:vix_current_project.command.build.prefix =
+            \ 'echo "{prefix} No <build> rules defined." &&'
+let g:vix_current_project.command.build.body =
+            \ 'echo "{body} No <build> rules defined." &&'
+let g:vix_current_project.command.build.postfix =
+            \ 'echo "{postfix} No <build> rules defined."'
+
+" ;-----------------------------------------------------------------------------
+" ; Clean (tmux/shell).
+" ;-----------------------------------------------------------------------------
+let g:vix_current_project.command.clean.prefix =
+            \ 'echo "{prefix} No <clean> rules defined." &&'
+let g:vix_current_project.command.clean.body =
+            \ 'echo "{body} No <clean> rules defined." &&'
+let g:vix_current_project.command.clean.postfix =
+            \ 'echo "{postfix} No <clean> rules defined."'
+
+" ;-----------------------------------------------------------------------------
+" ; Test (tmux/shell).
+" ;-----------------------------------------------------------------------------
+let g:vix_current_project.command.test.prefix =
+            \ 'echo "{prefix} No <test> rules defined." &&'
+let g:vix_current_project.command.test.body =
+            \ 'echo "{body} No <test> rules defined." &&'
+let g:vix_current_project.command.test.postfix =
+            \ 'echo "{postfix} No <test> rules defined."'
+
+" ;-----------------------------------------------------------------------------
+" ; Run (tmux/shell).
+" ;-----------------------------------------------------------------------------
+let g:vix_current_project.command.run.prefix =
+            \ ''
+let g:vix_current_project.command.run.body =
+            \ 'time python % && printf "done\n"'
+let g:vix_current_project.command.run.postfix =
+            \ ''
+
+" //////////////////////////////////////////////////////////////////////////////
+
+" ;-----------------------------------------------------------------------------
+" ; Make (vim-dispatch), F9
+" ;-----------------------------------------------------------------------------
+" First check for a "make.sh" script.
+if filereadable(g:vix_current_project.root . '/make.sh')
+    let g:vix_current_project.dispatch.make.args = 'cd ' .
+                \ g:vix_current_project.root . '; ' . './make.sh'
+    " If the "make.sh" is not present, continue with the internal call.
+else
+    let g:vix_current_project.dispatch.make.args =
+                \ '-dir='. g:vix_current_project.root . ' echo "{vim-dispatch:make} No <make> rules defined."; sleep 2'
+endif
+
+" ;-----------------------------------------------------------------------------
+" ; Build (vim-dispatch), F5
+" ;-----------------------------------------------------------------------------
+" First check for a "build.sh" script.
+if filereadable(g:vix_current_project.root . '/build.sh')
+    let g:vix_current_project.dispatch.build.args = 'cd ' .
+                \ g:vix_current_project.root . '; ' . './build.sh'
+    " If the "build.sh" is not present, continue with the internal call.
+else
+    let g:vix_current_project.dispatch.build.args =
+                \ '-dir='. g:vix_current_project.root . ' echo "{vim-dispatch:build} No <build> rules defined."; sleep 2'
+endif
+
+" ;-----------------------------------------------------------------------------
+" ; Clean (vim-dispatch), F11
+" ;-----------------------------------------------------------------------------
+" First check for a "clean.sh" script.
+if filereadable(g:vix_current_project.root . '/clean.sh')
+    let g:vix_current_project.dispatch.clean.args = 'cd ' .
+                \ g:vix_current_project.root . '; ' . './clean.sh'
+    " If the "clean.sh" is not present, continue with the internal call.
+else
+    let g:vix_current_project.dispatch.clean.args =
+                \ '-dir='. g:vix_current_project.root . ' echo "{vim-dispatch:clean} No <clean> rules defined."; sleep 2'
+endif
+
+" ;-----------------------------------------------------------------------------
+" ; Test (vim-dispatch), F8
+" ;-----------------------------------------------------------------------------
+" First check for a "test.sh" script.
+if filereadable(g:vix_current_project.root . '/test.sh')
+    let g:vix_current_project.dispatch.test.args = 'cd ' .
+                \ g:vix_current_project.root . '; ' . './test.sh'
+    " If the "test.sh" is not present, continue with the internal call.
+else
+    let g:vix_current_project.dispatch.test.args =
+                \ '-dir='. g:vix_current_project.root . ' echo "{vim-dispatch:test} No <test> rules defined."; sleep 2'
+endif
+
+" ;-----------------------------------------------------------------------------
+" ; Run (vim-dispatch), F10
+" ;-----------------------------------------------------------------------------
+" First check for a "run.sh" script.
+if filereadable(g:vix_current_project.root . '/run.sh')
+    let g:vix_current_project.dispatch.run.args = 'cd ' .
+                \ g:vix_current_project.root . '; ' . './run.sh'
+    " If the "run.sh" is not present, continue with the internal call.
+else
+    let g:vix_current_project.dispatch.run.args =
+                \ '-dir='. g:vix_current_project.root . ' bokeh serve --show app-plotter &&' . 'sleep 2'
+endif
+
+" ;-----------------------------------------------------------------------------
+" ; Deploy (F6), Alternative Make (F4), Single Run (F3) (vim-dispatch)
+" ;-----------------------------------------------------------------------------
+" Custom Commands
+
+" Deploy
+" Spawn an independent runner with a custom command.
+let g:vix_current_project.custom_deploy_command = 'Start -title=deploy -dir=' . g:vix_current_project.root . ' ' .
+            \ 'echo "{vim-dispatch:alternative_deploy}";' 
+            \ . ' '. 'sleep 1'
+
+nnoremap <F6> :execute g:vix_current_project.custom_deploy_command<CR>
+vnoremap <F6> <Esc>:execute g:vix_current_project.custom_deploy_command<CR>
+inoremap <F6> <Esc>:execute g:vix_current_project.custom_deploy_command<CR>
+
+" Make
+" Spawn an independent runner with a custom command.
+let g:vix_current_project.custom_make_command = 'Start -title=make -dir=' . g:vix_current_project.root . ' ' .
+            \ g:vix_current_project.dispatch.make.args
+
+nnoremap <F4> :execute g:vix_current_project.custom_make_command<CR>
+vnoremap <F4> <Esc>:execute g:vix_current_project.custom_make_command<CR>
+inoremap <F4> <Esc>:execute g:vix_current_project.custom_make_command<CR>
+
+" Run
+" Spawn an independent runner with a custom command.
+" This section sets up the single file runner. This is useful for cases where
+" we would like to test and run a single file. This is an alternative to the tmux based runner.
+let g:vix_current_project.custom_run_command = 'Start! -title=run -dir=' . g:vix_current_project.root . ' ' .
+            \ 'python % && printf "done\n" && sleep 2'
+
+nnoremap <F3> :execute g:vix_current_project.custom_run_command<CR>
+vnoremap <F3> <Esc>:execute g:vix_current_project.custom_run_command<CR>
+inoremap <F3> <Esc>:execute g:vix_current_project.custom_run_command<CR>
+
+let g:tmux_session = 'runner'
+
+" vim: ft=vim
