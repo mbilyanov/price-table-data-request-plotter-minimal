@@ -2,7 +2,7 @@
 import pandas as pd
 
 from bokeh.layouts import row, layout
-from bokeh.models import ColumnDataSource, Select
+from bokeh.models import ColumnDataSource, Select, Range1d
 from bokeh.plotting import curdoc, figure
 from bokeh.models import CustomJS, DatetimeTickFormatter
 
@@ -66,6 +66,7 @@ p1.xaxis.formatter = DatetimeTickFormatter(
     minutes=["%m/%d %H:%M"]
 )
 
+
 # Configure PLOT_2
 p2 = figure(plot_width=PLOT_WIDTH,
             plot_height=200,
@@ -86,6 +87,8 @@ p2.xaxis.formatter = DatetimeTickFormatter(
     hours=["%m/%d %H:%M"],
     minutes=["%m/%d %H:%M"]
 )
+
+p2.y_range = Range1d(-10, 10)
 
 
 def _get_OHLCV_data():
